@@ -10,7 +10,7 @@ docker-compose up -d
 
 Go into php container as user (1000) for artisan command, or composer
 ```` bash
-docker exec -it -u 1000  php /bin/bash
+docker exec -it -u 1000 php /bin/bash
 ````
 
 ## Install Laravel and move to main folder
