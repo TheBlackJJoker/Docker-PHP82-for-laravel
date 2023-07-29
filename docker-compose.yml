@@ -1,0 +1,53 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: '3.1'
+services:
+  redis:
+    image: 'redis:alpine'
+
+  mysql:
+    image: 'mysql:8.0'
+    working_dir: /application
+    volumes:
+      - '.:/application'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=password
+    ports:
+      - '61002:3306'
+    networks:
+      - code-network
+
+  webserver:
+    image: 'nginx:alpine'
+    working_dir: /application
+    volumes:
+      - '.:/application'
+      - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+    ports:
+      - '61000:80'
+    networks:
+      - code-network
+
+  php-fpm:
+    build: phpdocker/php-fpm
+    working_dir: /application
+    volumes:
+      - '.:/application'
+      - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
+    networks:
+      - code-network
+
+  adminer:
+      image: adminer
+      restart: always
+      ports:
+          - 8080:8080
+      networks:
+          - code-network
+networks:
+  code-network:
+    driver: bridge
