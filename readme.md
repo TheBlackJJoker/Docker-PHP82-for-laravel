@@ -10,7 +10,7 @@ docker-compose up -d
 
 Go into php container as user (1000) for artisan command, or composer
 ```` bash
-docker exec -it -u 1000  event-managment-php-fpm-1 /bin/bash
+docker exec -it -u 1000  php /bin/bash
 ````
 
 ## Install Laravel and move to main folder
@@ -30,7 +30,7 @@ chmod 777 -R storage
 ````
 
 ## Database connection
-    MYSQL_HOST = <docker mysql container name>
+    MYSQL_HOST = mysql <docker mysql container name>
     MYSQL_DATABASE = database
     MYSQL_USER = admin
     MYSQL_PASSWORD = password

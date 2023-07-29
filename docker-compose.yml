@@ -5,7 +5,7 @@ version: '3.1'
 services:
   redis:
     image: 'redis:alpine'
-
+    container_name: 'redis'
   mysql:
     image: 'mysql:8.0'
     working_dir: /application
@@ -20,6 +20,7 @@ services:
       - '61002:3306'
     networks:
       - code-network
+    container_name: 'mysql'
 
   webserver:
     image: 'nginx:alpine'
@@ -31,6 +32,7 @@ services:
       - '61000:80'
     networks:
       - code-network
+    container_name: 'webserver'
 
   php-fpm:
     build: phpdocker/php-fpm
@@ -40,6 +42,7 @@ services:
       - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
     networks:
       - code-network
+    container_name: 'php'
 
   adminer:
       image: adminer
@@ -48,6 +51,7 @@ services:
           - 8080:8080
       networks:
           - code-network
+      container_name: 'adminer'
 networks:
   code-network:
     driver: bridge
