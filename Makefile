@@ -57,7 +57,6 @@ down: check-env
 	docker-compose down
 
 laravel: check-env check-laravel
-	export $(cat .env | xargs)
 	echo "Instalowanie Laravel w kontenerze ${DOCKER_PHP_FPM}..."
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "composer create-project --prefer-dist laravel/laravel Laravel"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/vite.config.js"
@@ -75,4 +74,6 @@ laravel: check-env check-laravel
 php: check-env
 	docker exec -it -u 1000 ${DOCKER_PHP_FPM} /bin/bash
 
-auto-install: init up laravel
+auto-install: init up
+	include .env
+	laravel
