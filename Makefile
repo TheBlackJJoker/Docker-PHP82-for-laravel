@@ -77,4 +77,5 @@ php: check-env
 auto-install: init up load_env_and_run laravel
 
 load_env_and_run:
-	@set -a; . .env; set +a;
+	wait 5
+	set -a; . .env; set +a;
