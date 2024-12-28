@@ -10,6 +10,12 @@ check-env:
 		exit 1; \
 	fi
 
+check-laravel:
+	@if [ -f artisan ]; then \
+		echo "Laravel jest już zainstalowany."; \
+		exit 1; \
+	fi
+
 init:
 	@if [ -f .env ]; then \
     	read -p ".env już istnieje. Nadpisać? (t/n): " CONFIRM; \
@@ -50,6 +56,16 @@ rebuild: check-env
 down: check-env
 	docker-compose down
 
+laravel: check-env check-laravel
+	@echo "Instalowanie Laravel..."
+	composer create-project --prefer-dist laravel/laravel Laravel
+	@echo "Usuwam niepotrzebny plik vite.config.js..."
+	rm ./Laravel/vite.config.js
+	@echo "Przenoszę pliki Laravel do katalogu głównego..."
+	mv -v ./Laravel/* ./
+	mv -v ./Laravel/.[!.]* ./  # Przenosi ukryte pliki
+	@echo "Usuwam katalog Laravel..."
+	rm -rf Laravel
 
 php: check-env
 	docker exec -it -u 1000 ${DOCKER_PHP_FPM} /bin/bash
