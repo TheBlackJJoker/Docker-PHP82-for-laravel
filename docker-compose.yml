@@ -1,6 +1,3 @@
-###############################################################################
-#                          Generated on phpdocker.io                          #
-###############################################################################
 version: '3.1'
 services:
   mysql:
@@ -9,16 +6,16 @@ services:
     volumes:
       - '.:/application'
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=database
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     ports:
       - '61002:3306'
       - '3306:3306'
     networks:
       - code-network
-    container_name: 'mysql'
+    container_name: ${DOCKER_MYSQL}
 
   webserver:
     image: 'nginx:alpine'
@@ -30,7 +27,7 @@ services:
       - '61000:80'
     networks:
       - code-network
-    container_name: 'webserver'
+    container_name: ${DOCKER_WEBSERVER}
 
   php-fpm:
     build: phpdocker/php-fpm
@@ -40,13 +37,13 @@ services:
       - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
     networks:
       - code-network
-    container_name: 'php'
+    container_name: ${DOCKER_PHP_FPM}
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
 
   node:
     image: node:20-alpine3.16
-    container_name: 'node'
+    container_name: ${DOCKER_NODE}
     working_dir: /application
     volumes:
       - .:/application

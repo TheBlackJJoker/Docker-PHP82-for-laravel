@@ -3,14 +3,18 @@ PHP 8.4, Composer, MySQL 9.1, Ngnix, xDebug
 
 ## 
 
+## To do first
+
+First init .env for work anything else
+```` bash
+    make init
+````
+
+## Docker managment
+
 Run docker containers
 ```` bash
     make up
-````
-
-Build docker containers
-```` bash
-    make build
 ````
 
 Down docker containers
@@ -18,7 +22,12 @@ Down docker containers
     make down
 ````
 
-Go into php container console
+Rebuild docker containers
+```` bash
+    make rebuild
+````
+
+## Jump into php container for artisan or composer console
 ```` bash
     make php
 ````
@@ -39,11 +48,6 @@ Go into php container console
     chmod 777 -R storage
 ````
 
-## Database connection
-    MYSQL_HOST = mysql <docker mysql container name>
-    MYSQL_DATABASE = database
-    MYSQL_USER = admin
-    MYSQL_PASSWORD = password
     
 ## Links
-http://localhost:61000 - website
+http://localhost:61000 - your application
