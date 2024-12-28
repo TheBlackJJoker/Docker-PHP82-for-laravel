@@ -27,27 +27,15 @@ Rebuild docker containers
     make rebuild
 ````
 
+## Install Laravel - magic set up
+```` bash
+    make laravel
+````
+
 ## Jump into php container for artisan or composer console
 ```` bash
     make php
 ````
-
-## Install Laravel and move to main folder
-```` bash
-    composer create-project --prefer-dist laravel/laravel Laravel 
-````
-```` bash
-    mv -v ./Laravel/* ./Laravel/.* ./
-````
-```` bash
-    rm -rf Laravel
-````
-
-## Fix storage permission for laravel
-```` bash
-    chmod 777 -R storage
-````
-
-    
+ 
 ## Links
 http://localhost:61000 - your application
