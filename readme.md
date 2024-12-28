@@ -41,6 +41,23 @@ Rebuild docker containers
 ```` bash
     make php
 ````
+
+## Node install
+```` bash
+    make node-install
+````
+
+## Node dev
+```` bash
+    make dev
+````
+
+## Node build
+```` bash
+    make build
+````
+
+
  
 ## Links
 http://localhost:61000 - your application

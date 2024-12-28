@@ -65,11 +65,28 @@ laravel: check-env check-laravel up
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.gitignore"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/* ./"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/.[!.]* ./"
+	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv  ./welcome.blade.php ./resources/views/"
+	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mkdir -p /public/assets/css"
+	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "touch /public/assets/css/style.css"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan key:generate"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
 	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
+	node-install
 	echo "Instalacja Laravel zakończona."
 
 php: check-env
 	docker exec -it -u 1000 ${DOCKER_PHP_FPM} /bin/bash
+
+node-install: up
+	docker exec -u 1000 ${DOCKER_NODE} npm install
+	dev
+
+dev: up
+	docker exec -u 1000 ${DOCKER_NODE} npm run dev
+
+build: up
+	docker exec -u 1000 ${DOCKER_NODE} npm run build
+
+
+
