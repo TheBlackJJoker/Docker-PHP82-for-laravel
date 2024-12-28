@@ -1,32 +1,42 @@
-# Docker with PHP8.2, Composer, MySQL8, Redis, Ngnix
-Ready to work containers for Laravel, solving the problem with permission to newly created files by the artisan console, when working with WSL2.
+# Docker for Laravel
+PHP 8.4, Composer, MySQL 9.1, Ngnix, xDebug 
 
 ## 
 
 Run docker containers
 ```` bash
-docker-compose up -d
+    make up
 ````
 
-Go into php container as user (1000) for artisan command, or composer
+Build docker containers
 ```` bash
-docker exec -it -u 1000 php /bin/bash
+    make build
+````
+
+Down docker containers
+```` bash
+    make down
+````
+
+Go into php container console
+```` bash
+    make php
 ````
 
 ## Install Laravel and move to main folder
 ```` bash
-composer create-project --prefer-dist laravel/laravel Laravel 
+    composer create-project --prefer-dist laravel/laravel Laravel 
 ````
 ```` bash
-mv -v ./Laravel/* ./Laravel/.* ./
+    mv -v ./Laravel/* ./Laravel/.* ./
 ````
 ```` bash
-rm -rf Laravel
+    rm -rf Laravel
 ````
 
-## Fix storage permission
+## Fix storage permission for laravel
 ```` bash
-chmod 777 -R storage
+    chmod 777 -R storage
 ````
 
 ## Database connection
@@ -37,5 +47,3 @@ chmod 777 -R storage
     
 ## Links
 http://localhost:61000 - website
-
-http://localhost:8080 - Adminer (database management in browser)
