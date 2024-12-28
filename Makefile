@@ -74,6 +74,7 @@ laravel: check-env check-laravel
 php: check-env
 	docker exec -it -u 1000 ${DOCKER_PHP_FPM} /bin/bash
 
-auto-install: init up
-	include .env
-	laravel
+auto-install: init up load_env_and_run laravel
+
+load_env_and_run:
+	@set -a; . .env; set +a;
