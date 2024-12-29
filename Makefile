@@ -83,6 +83,7 @@ laravel: check-env check-laravel up
 	touch public/assets/css/style.css
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan key:generate"
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
+	wait 5
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
 	sudo chown -R "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" storage bootstrap/cache
 	sudo chmod -R 777 storage bootstrap/cache
