@@ -15,6 +15,6 @@
 
 </head>
 <body>
-    <div class="text-center w-full font-bold text-lg text">test</div>
+    <div class="text-center w-full font-bold text-lg text">Hello world</div>
 </body>
 </html>
