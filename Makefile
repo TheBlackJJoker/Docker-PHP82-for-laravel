@@ -78,6 +78,8 @@ laravel: check-env check-laravel up
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan key:generate"
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
+	sudo chmod -R 775 storage bootstrap/cache
+    sudo chown -R www-data:www-data storage bootstrap/cache
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
 	node-install
 	echo "Instalacja Laravel zakończona."
