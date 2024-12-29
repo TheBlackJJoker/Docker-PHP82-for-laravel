@@ -19,6 +19,12 @@ check-laravel:
 		exit 1; \
 	fi
 
+check-is-laravel:
+	@if [ ! -f artisan ]; then \
+		echo "Laravel nie jest zainstalowany. Użyj make laravel."; \
+		exit 1; \
+	fi
+
 init:
 	@if [ -f .env ]; then \
     	read -p ".env już istnieje. Nadpisać? (t/n): " CONFIRM; \
@@ -86,15 +92,18 @@ laravel: check-env check-laravel up
 	make dev
 
 php: check-env
-	docker exec -it -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} /bin/bash
+	docker exec -it --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} /bin/bash
 
 node-install: up
-	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm install
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm install
 dev: up
-	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run dev
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run dev
 
 build: up
-	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run build
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run build
 
-
-
+filament-install: check-env check-is-laravel up
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "composer require filament/filament:"^3.2" -W"
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan filament:install --panels"
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan make:filament-user"
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan optimize"

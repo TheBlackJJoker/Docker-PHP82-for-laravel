@@ -10,11 +10,11 @@
     <link rel="icon" href="#" type="image/svg+xml"> <!-- asset('assets/img/logo.svg') -->
 
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 <body>
-
+    <div class="text-center w-full font-bold text-lg text">test</div>
 </body>
 </html>
