@@ -81,16 +81,15 @@ laravel: check-env check-laravel up
 	sudo chmod -R 775 storage bootstrap/cache
     sudo chown -R www-data:www-data storage bootstrap/cache
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
-	node-install
+	make node-install
 	echo "Instalacja Laravel zakończona."
+	make dev
 
 php: check-env
 	docker exec -it -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} /bin/bash
 
 node-install: up
 	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm install
-	dev
-
 dev: up
 	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run dev
 
