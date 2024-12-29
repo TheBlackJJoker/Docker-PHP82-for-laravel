@@ -30,6 +30,7 @@ RUN apt-get update; \
         php8.4-gd \
         php8.4-mysql \
         php8.4-intl \
+        php8.4-xdg \
         php8.4-xdebug; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
