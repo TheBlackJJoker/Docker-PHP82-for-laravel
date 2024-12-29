@@ -1,13 +1,6 @@
 # Docker for Laravel
 PHP 8.4, Composer, MySQL 9.1, Ngnix, xDebug 
 
-## Make magic and install laraver
-```` bash
-    make auto-install
-````
-
-## OR
-
 ## To do first
 
 First init .env for work anything else
