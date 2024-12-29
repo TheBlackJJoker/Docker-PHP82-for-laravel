@@ -7,19 +7,21 @@ ARG PHP_FPM_GROUP=www-data
 
 RUN if getent passwd ${USER_ID} > /dev/null; then \
         EXISTING_USER=$(getent passwd ${USER_ID} | cut -d: -f1); \
-        usermod --uid ${USER_ID} ${EXISTING_USER} && \
-        groupmod --gid ${USER_ID} ${PHP_FPM_GROUP}; \
+        echo "UID ${USER_ID} already exists, using user ${EXISTING_USER}."; \
+        USER_NAME=${EXISTING_USER}; \
     else \
-        adduser \
-            --disabled-password \
-            --uid ${USER_ID} \
-            ${USER_NAME} && \
-        usermod \
-            --append \
-            --groups \
-            ${PHP_FPM_GROUP} \
-            ${USER_NAME}; \
-    fi
+        echo "UID ${USER_ID} not found, creating new user ${USER_NAME}."; \
+        adduser --disabled-password --uid ${USER_ID} ${USER_NAME}; \
+    fi && \
+    if getent group ${USER_ID} > /dev/null; then \
+        EXISTING_GROUP=$(getent group ${USER_ID} | cut -d: -f1); \
+        echo "GID ${USER_ID} already exists for group ${EXISTING_GROUP}, skipping groupmod."; \
+    else \
+        echo "GID ${USER_ID} not found, modifying group ${PHP_FPM_GROUP}."; \
+        groupmod --gid ${USER_ID} ${PHP_FPM_GROUP}; \
+    fi && \
+    echo "Adding user ${USER_NAME} to group ${PHP_FPM_GROUP}."; \
+    usermod --append --groups ${PHP_FPM_GROUP} ${USER_NAME}
 
 RUN apt-get update; \
     apt-get -y --no-install-recommends install \
