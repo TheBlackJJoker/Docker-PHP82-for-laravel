@@ -1,6 +1,20 @@
 FROM phpdockerio/php:8.4-fpm
 WORKDIR "/application"
 
+ARG USER_NAME=host-user
+ARG USER_ID=1000
+ARG PHP_FPM_GROUP=www-data
+
+RUN adduser \
+        --disabled-password \
+        --uid ${USER_ID} \
+        ${USER_NAME} \
+    && usermod \
+        --append \
+        --groups \
+        ${PHP_FPM_GROUP} \
+        ${USER_NAME}
+
 RUN apt-get update; \
     apt-get -y --no-install-recommends install \
         git \

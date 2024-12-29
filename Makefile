@@ -2,6 +2,9 @@ ifneq ("$(wildcard .env)", "")
     include .env
 endif
 
+CURRENT_USER_ID = $(shell id --user)
+CURRENT_USER_GROUP_ID = $(shell id --group)
+
 .PHONY: init set-app-name
 
 check-env:
@@ -58,35 +61,37 @@ down: check-env
 
 laravel: check-env check-laravel up
 	echo "Instalowanie Laravel w kontenerze ${DOCKER_PHP_FPM}..."
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "composer create-project --prefer-dist laravel/laravel Laravel"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/vite.config.js"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.env"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.env.example"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.gitignore"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/* ./"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/.[!.]* ./"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mv  ./welcome.blade.php ./resources/views/"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "mkdir -p /public/assets/css"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "touch /public/assets/css/style.css"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan key:generate"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
-	docker exec -u 1000 ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "composer create-project --prefer-dist laravel/laravel Laravel"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/vite.config.js"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.env"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.env.example"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "rm ./Laravel/.gitignore"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/* ./"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "mv -v ./Laravel/.[!.]* ./"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "chmod -R 775 storage bootstrap/cache"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "chown -R www-data:www-data storage bootstrap/cache"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "mv  ./welcome.blade.php ./resources/views/"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "mkdir -p /public/assets/css"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "touch /public/assets/css/style.css"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan key:generate"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
 	node-install
 	echo "Instalacja Laravel zakończona."
 
 php: check-env
-	docker exec -it -u 1000 ${DOCKER_PHP_FPM} /bin/bash
+	docker exec -it -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} /bin/bash
 
 node-install: up
-	docker exec -u 1000 ${DOCKER_NODE} npm install
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm install
 	dev
 
 dev: up
-	docker exec -u 1000 ${DOCKER_NODE} npm run dev
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run dev
 
 build: up
-	docker exec -u 1000 ${DOCKER_NODE} npm run build
+	docker exec -u --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_NODE} npm run build
 
 
 
