@@ -25,27 +25,27 @@ Rebuild docker containers
     make rebuild
 ````
 
-## Install Laravel - magic set up
+## Install Laravel, NPM and FILAMENTPHP
 ```` bash
     make laravel
 ````
-
-## Jump into php container for artisan or composer console
-```` bash
-    make php
-````
-
-## Node install
 ```` bash
     make node-install
 ````
+```` bash
+    make filament-install
+````
 
-## Node dev
+## Use in development
+Jump to php console for artisan, composer etc.
+```` bash
+    make php
+````
+npm run dev
 ```` bash
     make dev
 ````
-
-## Node build
+npm run build
 ```` bash
     make build
 ````
