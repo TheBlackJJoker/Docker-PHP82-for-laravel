@@ -77,7 +77,8 @@ laravel: check-env check-laravel up
 	mv -v ./Laravel/.[!.]* ./
 	rm -r ./Laravel
 	sudo chown -R "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" storage bootstrap/cache
-	sudo chmod -R 775 storage bootstrap/cache
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "chown -R storage bootstrap/cache"
+	sudo chmod -R 777 storage bootstrap/cache
 	mv  ./welcome.blade.php ./resources/views/
 	mkdir -p public/assets/css
 	touch public/assets/css/style.css
@@ -85,7 +86,8 @@ laravel: check-env check-laravel up
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan storage:link"
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan migrate"
 	sudo chown -R "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" storage bootstrap/cache
-	sudo chmod -R 775 storage bootstrap/cache
+	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "chown -R storage bootstrap/cache"
+	sudo chmod -R 777 storage bootstrap/cache
 	docker exec --user "${CURRENT_USER_ID}:${CURRENT_USER_GROUP_ID}" ${DOCKER_PHP_FPM} bash -c "php artisan optimize"
 	make node-install
 	echo "Instalacja Laravel zakończona."
