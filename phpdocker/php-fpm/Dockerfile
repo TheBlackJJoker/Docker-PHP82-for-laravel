@@ -5,15 +5,21 @@ ARG USER_NAME=host-user
 ARG USER_ID=1000
 ARG PHP_FPM_GROUP=www-data
 
-RUN adduser \
-        --disabled-password \
-        --uid ${USER_ID} \
-        ${USER_NAME} \
-    && usermod \
-        --append \
-        --groups \
-        ${PHP_FPM_GROUP} \
-        ${USER_NAME}
+RUN if getent passwd ${USER_ID} > /dev/null; then \
+        EXISTING_USER=$(getent passwd ${USER_ID} | cut -d: -f1); \
+        usermod --uid ${USER_ID} ${EXISTING_USER} && \
+        groupmod --gid ${USER_ID} ${PHP_FPM_GROUP}; \
+    else \
+        adduser \
+            --disabled-password \
+            --uid ${USER_ID} \
+            ${USER_NAME} && \
+        usermod \
+            --append \
+            --groups \
+            ${PHP_FPM_GROUP} \
+            ${USER_NAME}; \
+    fi
 
 RUN apt-get update; \
     apt-get -y --no-install-recommends install \
